@@ -1,130 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:newtalk/widgets/base_scaffold.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:newtalk/services/search_service.dart';
 
-class FriendPage extends StatefulWidget {
-  /// 친구 페이지
-  ///
-  /// - 스크롤 하는 법
-  /// - Expanded를 Row, Column에서 사용하는 법
-  /// - StatefulWidget 사용하는 법을 공부함
+class FriendPage extends ConsumerStatefulWidget {
   const FriendPage({Key? key}) : super(key: key);
 
   @override
-  State<FriendPage> createState() => _FriendPageState();
+  ConsumerState<FriendPage> createState() => _FriendPageState();
 }
 
-class _FriendPageState extends State<FriendPage> {
+class _FriendPageState extends ConsumerState<FriendPage> {
   bool switchValue = false;
+
+  final friends = List.generate(100, (index) => '친구 #$index');
+
+  Widget _buildProfile(String name) {
+    const size = 20.0;
+
+    return ListTile(
+      contentPadding: const EdgeInsets.only(
+        top: 10,
+        bottom: 10,
+        left: 15,
+      ),
+      horizontalTitleGap: 20,
+      leading: const SizedBox(
+        height: double.infinity,
+        child: CircleAvatar(
+          child: Icon(Icons.person, size: size),
+          radius: size,
+        ),
+      ),
+      onTap: () {},
+      title: Text(
+        name,
+        style: const TextStyle(
+          fontSize: size,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BaseScaffold(
-      title: "친구",
-      // 스크롤을 할 수 있게 됨
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Switch(
-              value: switchValue,
-              onChanged: (value) {
-                switchValue = value;
-                print(switchValue);
-                setState(() {});
-              },
-            ),
-            // 3항 연산자
-            switchValue ? _build4ColorContainers() : _build4ColorContainers2(),
+    final searchService = ref.watch(searchServiceProvider);
 
-            // 조건부 리스트 아이템
-            if (!switchValue) _build4ColorContainers(),
-            if (switchValue) _build4ColorContainers2(),
+    final filtered = friends.where((value) {
+      if (searchService.key?.key != null) {
+        return value.contains(searchService.key?.key ?? '');
+      }
+      return true;
+    });
 
-            // 함수를 바로 작동 (IIFE)
-            (() {
-              // 1. late Widget 쓰기
-              // 2. Widget widget = 바로 초기화하기
-              // 3. if else 쓰기
-              late Widget widget;
-              if (switchValue) {
-                widget = _build4ColorContainers();
-              }
-              if (!switchValue) {
-                widget = _build4ColorContainers2();
-              }
-              return widget;
-            })(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _build4ColorContainers() {
-    return SizedBox(
-      height: 500,
+    return SingleChildScrollView(
       child: Column(
         children: [
-          Expanded(
-            flex: 1,
-            child: Container(
-              color: Colors.black,
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Container(
-              color: Colors.orange,
-            ),
-          ),
-          Expanded(
-            flex: 3,
-            child: Container(
-              color: Colors.blue,
-            ),
-          ),
-          Expanded(
-            flex: 4,
-            child: Container(
-              color: Colors.red,
-            ),
+          const SizedBox(height: 10),
+          _buildProfile("나"),
+          const Divider(),
+          ListView(
+            shrinkWrap: true,
+            children: filtered.map((e) => _buildProfile(e)).toList(),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _build4ColorContainers2() {
-    return Row(
-      children: [
-        Expanded(
-          flex: 1,
-          child: Container(
-            height: 500,
-            color: Colors.black,
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-            height: 500,
-            color: Colors.orange,
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-            height: 500,
-            color: Colors.blue,
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-            height: 500,
-            color: Colors.red,
-          ),
-        ),
-      ],
     );
   }
 }

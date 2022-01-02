@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:newtalk/pages/chatting/chatting_page.dart';
+import 'package:newtalk/pages/root_tabs/root_tab_page.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -11,7 +11,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ChattingPage(),
+      home: const RootTabPage(),
     );
   }
 }
