@@ -46,10 +46,7 @@ class _FriendPageState extends ConsumerState<FriendPage> {
     final searchService = ref.watch(searchServiceProvider);
 
     final filtered = friends.where((value) {
-      if (searchService.key?.key != null) {
-        return value.contains(searchService.key?.key ?? '');
-      }
-      return true;
+      return value.contains(searchService.key?.key ?? '');
     });
 
     return SingleChildScrollView(
