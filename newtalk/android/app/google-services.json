@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "870425226349",
+    "firebase_url": "https://snacktalk-86509-default-rtdb.firebaseio.com",
+    "project_id": "snacktalk-86509",
+    "storage_bucket": "snacktalk-86509.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:870425226349:android:faa8aa5c2c1c3083796364",
+        "android_client_info": {
+          "package_name": "me.aqudi.newtalk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "870425226349-fk4n4ah1sqn6nk2up4uc8cd9vqti57ih.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.aqudi.newtalk",
+            "certificate_hash": "865253cf8ade4321c95eaf01be32ab800fb04a99"
+          }
+        },
+        {
+          "client_id": "870425226349-gcjd13va22et2gkjj1c746ejin7nr8id.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2avtCjKzGpDtd7M-5ugP_KJ9blc895oE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "870425226349-gcjd13va22et2gkjj1c746ejin7nr8id.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
