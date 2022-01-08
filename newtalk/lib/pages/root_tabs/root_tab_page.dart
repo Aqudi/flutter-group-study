@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:newtalk/pages/chatting/chatting_page.dart';
+import 'package:newtalk/pages/chatting/chatting_list_page.dart';
 import 'package:newtalk/pages/friend/friend_page.dart';
 import 'package:newtalk/pages/menu/menu_page.dart';
 import 'package:newtalk/services/search_service.dart';
@@ -16,7 +16,7 @@ class RootTabPage extends ConsumerStatefulWidget {
 class _RootTabPageState extends ConsumerState<RootTabPage> {
   final pages = [
     const FriendPage(),
-    const ChattingPage(),
+    const ChattingListPage(),
     const MenuPage(),
   ];
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:newtalk/pages/friend/widgets/profile_list_tile.dart';
 import 'package:newtalk/services/search_service.dart';
 
 class FriendPage extends ConsumerStatefulWidget {
@@ -10,36 +11,10 @@ class FriendPage extends ConsumerStatefulWidget {
 }
 
 class _FriendPageState extends ConsumerState<FriendPage> {
+  final scrollController = ScrollController();
   bool switchValue = false;
 
   final friends = List.generate(100, (index) => '친구 #$index');
-
-  Widget _buildProfile(String name) {
-    const size = 20.0;
-
-    return ListTile(
-      contentPadding: const EdgeInsets.only(
-        top: 10,
-        bottom: 10,
-        left: 15,
-      ),
-      horizontalTitleGap: 20,
-      leading: const SizedBox(
-        height: double.infinity,
-        child: CircleAvatar(
-          child: Icon(Icons.person, size: size),
-          radius: size,
-        ),
-      ),
-      onTap: () {},
-      title: Text(
-        name,
-        style: const TextStyle(
-          fontSize: size,
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,14 +25,16 @@ class _FriendPageState extends ConsumerState<FriendPage> {
     });
 
     return SingleChildScrollView(
+      controller: scrollController,
       child: Column(
         children: [
           const SizedBox(height: 10),
-          _buildProfile("나"),
+          const ProfileListTile(name: "나"),
           const Divider(),
           ListView(
+            controller: scrollController,
             shrinkWrap: true,
-            children: filtered.map((e) => _buildProfile(e)).toList(),
+            children: filtered.map((e) => ProfileListTile(name: e)).toList(),
           ),
         ],
       ),

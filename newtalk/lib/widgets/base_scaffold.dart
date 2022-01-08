@@ -16,13 +16,15 @@ class BaseScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title ?? 'Unknown'),
-        actions: actions,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(title ?? 'Unknown'),
+          actions: actions,
+        ),
+        body: body,
+        bottomNavigationBar: bottomNavigationBar,
       ),
-      body: body,
-      bottomNavigationBar: bottomNavigationBar,
     );
   }
 }

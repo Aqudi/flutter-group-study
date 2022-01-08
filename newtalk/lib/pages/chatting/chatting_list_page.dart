@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:newtalk/pages/friend/friend_page.dart';
 
-class ChattingPage extends StatelessWidget {
-  const ChattingPage({Key? key}) : super(key: key);
+class ChattingListPage extends StatelessWidget {
+  const ChattingListPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
