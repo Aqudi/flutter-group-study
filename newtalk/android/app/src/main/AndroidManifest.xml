@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.newtalk">
+    package="me.aqudi.newtalk">
    <application
         android:label="newtalk"
         android:name="${applicationName}"

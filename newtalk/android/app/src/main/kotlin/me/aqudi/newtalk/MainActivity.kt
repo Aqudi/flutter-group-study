@@ -1,4 +1,4 @@
-package com.example.newtalk
+package me.aqudi.newtalk
 
 import io.flutter.embedding.android.FlutterActivity
 
