@@ -1,22 +1,11 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:newtalk/services/base_service.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final searchServiceProvider = ChangeNotifierProvider((ref) => SearchService());
+final searchServiceProvider =
+    StateNotifierProvider<SearchService, String>((ref) => SearchService());
 
-@immutable
-class SearchKey {
-  final String? key;
+class SearchService extends StateNotifier<String> {
+  SearchService([String? keyword]) : super(keyword ?? '');
 
-  const SearchKey(this.key);
-}
-
-class SearchService extends BaseService {
-  SearchKey? _key;
-
-  SearchKey? get key => _key;
-  set key(SearchKey? key) {
-    _key = key;
-    notifyListeners();
-  }
+  void search(String? keyword) => state = keyword ?? '';
+  void clear(String keyword) => state = '';
 }

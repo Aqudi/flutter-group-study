@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BaseScaffold extends StatelessWidget {
+  final bool isLoading;
   final String? title;
   final List<Widget> actions;
   final Widget? body;
@@ -8,6 +9,7 @@ class BaseScaffold extends StatelessWidget {
 
   const BaseScaffold({
     Key? key,
+    this.isLoading = false,
     this.title,
     this.actions = const [],
     this.body,
@@ -22,7 +24,11 @@ class BaseScaffold extends StatelessWidget {
           title: Text(title ?? 'Unknown'),
           actions: actions,
         ),
-        body: body,
+        body: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : body,
         bottomNavigationBar: bottomNavigationBar,
       ),
     );

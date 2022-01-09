@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:newtalk/pages/chatting/chatting_list_page.dart';
 import 'package:newtalk/pages/friend/friend_page.dart';
 import 'package:newtalk/pages/menu/menu_page.dart';
@@ -75,8 +75,15 @@ class _RootTabPageState extends ConsumerState<RootTabPage> {
   }
 
   @override
+  void dispose() {
+    // controller 사용 후 dispose로 메모리 반환
+    textEditionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final searchService = ref.read(searchServiceProvider);
+    final searchService = ref.read(searchServiceProvider.notifier);
 
     return BaseScaffold(
       title: "채팅앱",
@@ -87,7 +94,7 @@ class _RootTabPageState extends ConsumerState<RootTabPage> {
               context,
               backgroundColor: Colors.amber[50],
             );
-            searchService.key = SearchKey(value);
+            searchService.search(value);
           },
           icon: const Icon(Icons.search),
         ),
