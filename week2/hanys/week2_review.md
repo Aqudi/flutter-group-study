@@ -16,3 +16,13 @@
     - 채팅방 상단에 검색 및 더보기 아이콘
     - 채팅 입력 칸 및 전송 버튼 생성
       - TextFormField
+  
+- Porvider
+  - Flutter에서 사용할 수 있는 대표적인 상태 관리 방법 중 하나
+  - Provider는 생성 부분과 소시 부분으로 나누어짐
+    - 생성 부분에서는 사용할 데이터 타입 결정하고 Provider 생성
+    - 소비 부분에서는 Provider를 통해 데이터를 불러오거나 수정
+  - watch: 데이터 값을 화면에 보여주기 위해 데이터 값이 변경되었을 때, 위젯을 재빌드하여 변경된 데이터 값을 보여줌
+  - read: 데이터 값을 변경하는 등의 일을 위한 용도, 변경에 따라 재빌드 하지 않음
+  - ChangeNotifierProvider
+    - ChangeNotifier의 notifyLisnters()를 기다리다 호출되면, 자신의 자식을 재빌드하여 UI를 업데이트
