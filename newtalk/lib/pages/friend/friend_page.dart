@@ -18,12 +18,7 @@ class FriendPage extends HookConsumerWidget {
     final scrollController = useScrollController();
 
     // 값을 기억
-    final friends = useMemoized(
-      () => List.generate(100, (index) {
-        print(index);
-        return '친구 #$index';
-      }),
-    );
+    final friends = useMemoized(() => ["철수", "영희", "태조", "세종"]);
 
     // // state로 useState로 사용 가능 (이때는 ValueNotifier로 적용됨)
     // // state value는 applyFilter.value로 바꾸거나 사용 가능

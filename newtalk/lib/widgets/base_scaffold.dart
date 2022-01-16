@@ -18,18 +18,23 @@ class BaseScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(title ?? 'Unknown'),
-          actions: actions,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(title ?? 'Unknown'),
+            actions: actions,
+          ),
+          body: isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : body,
+          bottomNavigationBar: bottomNavigationBar,
         ),
-        body: isLoading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : body,
-        bottomNavigationBar: bottomNavigationBar,
       ),
     );
   }

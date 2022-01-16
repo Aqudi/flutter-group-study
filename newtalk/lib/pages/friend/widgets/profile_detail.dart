@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:newtalk/pages/chatting/chatting_room_page.dart';
 import 'package:newtalk/pages/friend/widgets/profile_avatar.dart';
+import 'package:newtalk/services/chatting_room_service.dart';
 
-class ProfileDetail extends StatelessWidget {
-  final String? name;
+class ProfileDetail extends HookConsumerWidget {
+  final String name;
 
   const ProfileDetail({
     Key? key,
-    this.name,
+    required this.name,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final chattingRoomService = ref.read(chattingRoomServiceProvider);
+
     const size = 40.0;
     const textColor = Colors.white;
     const nameStyle = TextStyle(
@@ -57,7 +61,7 @@ class ProfileDetail extends StatelessWidget {
                     const ProfileAvatar(size: size),
                     const SizedBox(height: 3),
                     Text(
-                      '$name',
+                      name,
                       style: nameStyle,
                     ),
                   ],
@@ -68,7 +72,9 @@ class ProfileDetail extends StatelessWidget {
                 color: textColor.withOpacity(0.5),
               ),
               IconButton(
-                onPressed: () {
+                onPressed: () async {
+                  await chattingRoomService
+                      .createRoom(roomName: name, userIds: [name]);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
