@@ -24,9 +24,13 @@ class BaseScaffold extends StatelessWidget {
       },
       child: SafeArea(
         child: Scaffold(
+          backgroundColor: Colors.white,
           appBar: AppBar(
-            title: Text(title ?? 'Unknown'),
+            title: Text(
+              title ?? 'Unknown',
+            ),
             actions: actions,
+            elevation: 0,
           ),
           body: isLoading
               ? const Center(
