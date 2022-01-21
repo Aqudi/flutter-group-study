@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:newtalk/models/chatting_message.dart';
 import 'package:newtalk/pages/chatting/widgets/chatting_bubble.dart';
 import 'package:newtalk/services/auth_service.dart';
@@ -20,7 +21,6 @@ class ChattingRoomPage extends HookConsumerWidget {
     final controller = useTextEditingController();
 
     final buildMessageList = useCallback(() {
-      ChattingMessage? lastMessage;
       return Expanded(
         child: StreamBuilder(
           stream: chattingRoomService.getMessages(),
@@ -57,6 +57,8 @@ class ChattingRoomPage extends HookConsumerWidget {
                   break;
                 case ConnectionState.active:
                 case ConnectionState.done:
+                  final docsSize = snapshot.data?.size ?? 0;
+                  final docs = snapshot.data?.docs;
                   return ListView.builder(
                     shrinkWrap: true,
                     reverse: true,
@@ -67,26 +69,57 @@ class ChattingRoomPage extends HookConsumerWidget {
                       left: 10,
                       right: 10,
                     ),
-                    itemCount: snapshot.data?.size ?? 0,
+                    itemCount: docsSize,
                     itemBuilder: (context, index) {
-                      final message =
-                          snapshot.data?.docs.elementAt(index).data();
+                      final message = docs?[index].data();
+                      final nextMessage = (docsSize <= (index + 1))
+                          ? null
+                          : docs?[index + 1].data();
+                      final prevMessage =
+                          (0 > (index - 1)) ? null : docs?[index - 1].data();
+
                       final isMe = message?.sendBy == authService.name;
 
-                      // 이전 유저와 현재 유저가 같지 않고, 내가 아닐 때 이름 출력
-                      // Instagram 그룹 채팅과 유사한 방식
-                      bool sameWithBefore = false;
-                      if (lastMessage != null) {
-                        sameWithBefore = lastMessage?.sendBy == message?.sendBy;
+                      final showAvatar =
+                          !isMe && (message?.sendBy != prevMessage?.sendBy);
+
+                      final showUsername =
+                          !isMe && !(message?.sendBy == nextMessage?.sendBy);
+
+                      bool showTime = false;
+                      if (nextMessage?.createdAt != null &&
+                          message?.createdAt != null &&
+                          message!.createdAt
+                              .subtract(const Duration(minutes: 5))
+                              .isAfter(nextMessage!.createdAt)) {
+                        showTime = true;
                       }
 
-                      lastMessage = message;
-                      final bubble = ChattingBubble(
-                        isMe: isMe,
-                        message: message,
-                        isNotContinued: !sameWithBefore,
+                      children = [
+                        if (showTime)
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 3, bottom: 8),
+                              child: Text(
+                                DateFormat('yyyy-MM-dd HH:mm')
+                                    .format(message!.createdAt),
+                              ),
+                            ),
+                          ),
+                        if (showUsername)
+                          ChattingBubble(
+                            message: message,
+                            type: ChattingBubbleType.username,
+                          ),
+                        ChattingBubble(
+                          isMe: isMe,
+                          message: message,
+                          showAvatar: showAvatar,
+                        ),
+                      ];
+                      return Wrap(
+                        children: children,
                       );
-                      return bubble;
                     },
                   );
               }
