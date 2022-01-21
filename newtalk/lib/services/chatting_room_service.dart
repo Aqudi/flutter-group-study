@@ -106,8 +106,9 @@ class ChattingRoomService extends BaseService {
     // 메시지 추가
     await _roomMessagesRef.add(message);
     // 마지막 메시지 업데이트
-    await _roomsRef
-        .doc(_currentRoom?.id)
-        .update({"recentMessage": message.toJson()});
+    await _roomsRef.doc(_currentRoom?.id).update({
+      "recentMessage": message.toJson(),
+      "updatedAt": now,
+    });
   }
 }
