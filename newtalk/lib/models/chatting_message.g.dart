@@ -10,12 +10,12 @@ ChattingMessage _$ChattingMessageFromJson(Map<String, dynamic> json) =>
     ChattingMessage(
       text: json['text'] as String,
       sendBy: json['sendBy'] as String,
-      createdAt: const TimestampConverter().fromJson(json['createdAt'] as int),
+      createdAt: DateTime.parse(json['createdAt'] as String),
     );
 
 Map<String, dynamic> _$ChattingMessageToJson(ChattingMessage instance) =>
     <String, dynamic>{
       'text': instance.text,
       'sendBy': instance.sendBy,
-      'createdAt': const TimestampConverter().toJson(instance.createdAt),
+      'createdAt': instance.createdAt.toIso8601String(),
     };

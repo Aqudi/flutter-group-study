@@ -12,12 +12,8 @@ _$_ChattingRoom _$$_ChattingRoomFromJson(Map<String, dynamic> json) =>
       createdBy: json['createdBy'] as String?,
       type: $enumDecodeNullable(_$ChattingRoomTypeEnumMap, json['type']) ??
           ChattingRoomType.direct,
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTime.parse(json['updatedAt'] as String),
+      createdAt: const TimestampConverter().fromJson(json['createdAt']),
+      updatedAt: const TimestampConverter().fromJson(json['updatedAt']),
       userIds: (json['userIds'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -33,8 +29,8 @@ Map<String, dynamic> _$$_ChattingRoomToJson(_$_ChattingRoom instance) =>
       'name': instance.name,
       'createdBy': instance.createdBy,
       'type': _$ChattingRoomTypeEnumMap[instance.type],
-      'createdAt': instance.createdAt?.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
+      'createdAt': const TimestampConverter().toJson(instance.createdAt),
+      'updatedAt': const TimestampConverter().toJson(instance.updatedAt),
       'userIds': instance.userIds,
       'recentMessage': instance.recentMessage,
     };
