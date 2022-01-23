@@ -1,45 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'package:newtalk/models/converters/timestamp_converter.dart';
 
+part 'chatting_message.freezed.dart';
 part 'chatting_message.g.dart';
 
-@JsonSerializable()
-class ChattingMessage {
-  @JsonKey(ignore: true)
-  final String? id;
-  final String text;
-  final String sendBy;
-  @TimestampConverter()
-  final DateTime createdAt;
+enum ChattingMessageType {
+  @JsonValue(0)
+  text,
+  @JsonValue(1)
+  notification,
+}
 
-  ChattingMessage({
-    this.id,
-    required this.text,
-    required this.sendBy,
-    required this.createdAt,
-  });
+@freezed
+class ChattingMessage with _$ChattingMessage {
+  factory ChattingMessage({
+    @JsonKey(ignore: true) String? id,
+    required String text,
+    required String sendBy,
+    required ChattingMessageType type,
+    @TimestampConverter() required DateTime createdAt,
+  }) = _ChattingMessage;
 
   factory ChattingMessage.fromFirestore(
-          DocumentSnapshot<Map<String, dynamic>> doc) =>
-      ChattingMessage.fromJson(doc.data()!).copyWith(id: doc.id);
+      DocumentSnapshot<Map<String, dynamic>> doc) {
+    final a = ChattingMessage.fromJson(doc.data()!).copyWith(id: doc.id);
+    return a;
+  }
 
   factory ChattingMessage.fromJson(Map<String, dynamic> json) =>
       _$ChattingMessageFromJson(json);
-  Map<String, dynamic> toJson() => _$ChattingMessageToJson(this);
-
-  ChattingMessage copyWith({
-    String? id,
-    String? text,
-    String? sendBy,
-    DateTime? createdAt,
-  }) {
-    return ChattingMessage(
-      id: id ?? this.id,
-      text: text ?? this.text,
-      sendBy: sendBy ?? this.sendBy,
-      createdAt: createdAt ?? this.createdAt,
-    );
-  }
 }

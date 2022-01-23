@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:newtalk/pages/auth/login_page.dart';
 import 'package:newtalk/services/auth_service.dart';
 
 class MenuPage extends HookConsumerWidget {
@@ -25,12 +24,6 @@ class MenuPage extends HookConsumerWidget {
                 '로그아웃',
                 () async {
                   await authService.logout();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoginPage(),
-                    ),
-                  );
                 },
               )
             ],

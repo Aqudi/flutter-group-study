@@ -38,10 +38,12 @@ class ChattingListPage extends HookConsumerWidget {
             case ConnectionState.none:
             case ConnectionState.waiting:
               children = const <Widget>[
-                SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: CircularProgressIndicator(),
+                Center(
+                  child: SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: CircularProgressIndicator(),
+                  ),
                 ),
               ];
               break;

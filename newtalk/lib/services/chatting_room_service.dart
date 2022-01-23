@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:newtalk/models/chatting_message.dart';
 import 'package:newtalk/models/chatting_room.dart';
@@ -35,15 +38,12 @@ class ChattingRoomService extends BaseService {
     final snapshot = _roomsRef
         .where(
           "userIds",
-          arrayContains: _authService.name,
+          arrayContains: _authService.user.uid,
         )
         .orderBy("updatedAt", descending: true)
         .snapshots();
     return snapshot;
   }
-
-  /// TODO: direct 메시지 방이 있는지 확인하여 roomId를 반환
-  Future<String?> checkDirectMessageRoom(String targetId) async {}
 
   /// 채팅 방 만들기
   Future<void> createRoom({
@@ -56,7 +56,8 @@ class ChattingRoomService extends BaseService {
         userIds.length == 1 ? ChattingRoomType.direct : ChattingRoomType.group;
 
     // 자신을 방에 참가시킴
-    userIds.add(_authService.name!);
+    userIds.add(_authService.user.uid);
+    userIds.sort();
 
     // // direct 메시지 방이 있는지 확인
     // if (type == ChattingRoomType.direct) {
@@ -73,13 +74,36 @@ class ChattingRoomService extends BaseService {
       name: roomName,
       updatedAt: now,
       createdAt: now,
-      createdBy: _authService.name,
+      createdBy: _authService.user.uid,
       type: type,
       userIds: userIds,
     );
 
-    // 생성된 방 ID를 넣어서 현재 Room을 지정
-    final roomDocument = await _roomsRef.add(room);
+    bool created = false;
+    DocumentReference<ChattingRoom> roomDocument;
+    if (type == ChattingRoomType.direct) {
+      // Direct message 중복 생성을 방지하기 위해 두 user의 UID를 합쳐 HASH ID 생성
+      final bytes = utf8.encode(userIds.join(','));
+      final roomId = sha256.convert(bytes);
+      roomDocument = _roomsRef.doc(roomId.toString());
+
+      // 방이 없으면 생성
+      final snapshot = await roomDocument.get();
+      if (!snapshot.exists) {
+        roomDocument.set(room);
+        created = true;
+      }
+    } else {
+      // 생성된 방 ID를 넣어서 현재 Room을 지정
+      roomDocument = await _roomsRef.add(room);
+      created = true;
+    }
+    if (created) {
+      await sendMessage(
+        text: "'${_authService.user.name}'님이 채팅방을 만드셨습니다.",
+        type: ChattingMessageType.notification,
+      );
+    }
     setCurrentRoom(room.copyWith(id: roomDocument.id));
   }
 
@@ -94,14 +118,15 @@ class ChattingRoomService extends BaseService {
 
   /// 현재 방에 메시지 보내기
   Future<void> sendMessage({
-    required String createdBy,
     required String text,
+    ChattingMessageType type = ChattingMessageType.text,
   }) async {
     final now = DateTime.now();
     final message = ChattingMessage(
       createdAt: now,
-      sendBy: createdBy,
+      sendBy: _authService.user.uid,
       text: text,
+      type: type,
     );
     // 메시지 추가
     await _roomMessagesRef.add(message);

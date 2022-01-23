@@ -78,13 +78,20 @@ class ChattingRoomPage extends HookConsumerWidget {
                       final prevMessage =
                           (0 > (index - 1)) ? null : docs?[index - 1].data();
 
-                      final isMe = message?.sendBy == authService.name;
+                      final isMe = message?.sendBy == authService.user.uid;
+                      final isNotification =
+                          message?.type == ChattingMessageType.notification;
+                      final isPrevNotification =
+                          prevMessage?.type == ChattingMessageType.notification;
 
-                      final showAvatar =
-                          !isMe && (message?.sendBy != prevMessage?.sendBy);
+                      final showAvatar = !isNotification &&
+                          !isMe &&
+                          (message?.sendBy != prevMessage?.sendBy);
 
-                      final showUsername =
-                          !isMe && !(message?.sendBy == nextMessage?.sendBy);
+                      final showUsername = isPrevNotification ||
+                          (!isNotification &&
+                              !isMe &&
+                              (message?.sendBy != nextMessage?.sendBy));
 
                       bool showTime = false;
                       if (nextMessage?.createdAt != null &&
@@ -96,6 +103,11 @@ class ChattingRoomPage extends HookConsumerWidget {
                       }
 
                       children = [
+                        if (isNotification)
+                          ChattingBubble(
+                            message: message,
+                            type: ChattingBubbleType.notification,
+                          ),
                         if (showTime)
                           Center(
                             child: Padding(
@@ -111,12 +123,14 @@ class ChattingRoomPage extends HookConsumerWidget {
                             message: message,
                             type: ChattingBubbleType.username,
                           ),
-                        ChattingBubble(
-                          isMe: isMe,
-                          message: message,
-                          showAvatar: showAvatar,
-                        ),
+                        if (!isNotification)
+                          ChattingBubble(
+                            isMe: isMe,
+                            message: message,
+                            showAvatar: showAvatar,
+                          ),
                       ];
+
                       return Wrap(
                         children: children,
                       );
@@ -161,7 +175,6 @@ class ChattingRoomPage extends HookConsumerWidget {
                     final text = controller.text;
                     controller.clear();
                     chattingRoomService.sendMessage(
-                      createdBy: authService.name!,
                       text: text,
                     );
                   }

@@ -24,18 +24,6 @@ class _RootTabPageState extends ConsumerState<RootTabPage> {
 
   final textEditionController = TextEditingController();
 
-  // String _getTabPageName(int tabIndex) {
-  //   switch (pages[tabIndex]) {
-  //     case ChattingPage:
-  //       break;
-  //     case FriendPage:
-  //       break;
-  //     case MenuPage:
-  //       break;
-  //     default:
-  //   }
-  // }
-
   Future<String?> showSampleDialog(
     BuildContext context, {
     Color? backgroundColor,

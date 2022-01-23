@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newtalk/models/chatting_message.dart';
-import 'package:newtalk/pages/friend/widgets/profile_avatar.dart';
+import 'package:newtalk/widgets/profile_avatar.dart';
 
 class ChattingListTile extends StatelessWidget {
   final String name;

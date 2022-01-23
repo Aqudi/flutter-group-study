@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:newtalk/models/app_user.dart';
 import 'package:newtalk/pages/chatting/chatting_room_page.dart';
-import 'package:newtalk/pages/friend/widgets/profile_avatar.dart';
+import 'package:newtalk/widgets/profile_avatar.dart';
 import 'package:newtalk/services/chatting_room_service.dart';
 
 class ProfileDetail extends HookConsumerWidget {
-  final String name;
+  final AppUser user;
 
   const ProfileDetail({
     Key? key,
-    required this.name,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -58,10 +59,10 @@ class ProfileDetail extends HookConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const ProfileAvatar(size: size),
+                    ProfileAvatar(size: size, user: user),
                     const SizedBox(height: 3),
                     Text(
-                      name,
+                      user.name,
                       style: nameStyle,
                     ),
                   ],
@@ -74,11 +75,12 @@ class ProfileDetail extends HookConsumerWidget {
               IconButton(
                 onPressed: () async {
                   await chattingRoomService
-                      .createRoom(roomName: name, userIds: [name]);
+                      .createRoom(roomName: user.name, userIds: [user.uid]);
+                  Navigator.pop(context);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ChattingRoomPage(name: name),
+                        builder: (context) => ChattingRoomPage(name: user.name),
                       ));
                 },
                 icon: const Icon(

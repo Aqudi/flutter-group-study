@@ -41,6 +41,10 @@ dependencies:
   flutterfire_ui: ^0.3.1
   freezed_annotation: ^1.1.0
   intl: ^0.17.0
+  firebase_auth: ^3.3.5
+  google_sign_in: ^5.2.3
+  logger: ^1.1.0
+  crypto: ^3.0.1
 
 dev_dependencies:
   flutter_test:

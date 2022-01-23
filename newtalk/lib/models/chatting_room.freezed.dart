@@ -86,6 +86,8 @@ abstract class $ChattingRoomCopyWith<$Res> {
       @TimestampConverter() DateTime? updatedAt,
       List<String>? userIds,
       ChattingMessage? recentMessage});
+
+  $ChattingMessageCopyWith<$Res>? get recentMessage;
 }
 
 /// @nodoc
@@ -142,6 +144,17 @@ class _$ChattingRoomCopyWithImpl<$Res> implements $ChattingRoomCopyWith<$Res> {
               as ChattingMessage?,
     ));
   }
+
+  @override
+  $ChattingMessageCopyWith<$Res>? get recentMessage {
+    if (_value.recentMessage == null) {
+      return null;
+    }
+
+    return $ChattingMessageCopyWith<$Res>(_value.recentMessage!, (value) {
+      return _then(_value.copyWith(recentMessage: value));
+    });
+  }
 }
 
 /// @nodoc
@@ -160,6 +173,9 @@ abstract class _$ChattingRoomCopyWith<$Res>
       @TimestampConverter() DateTime? updatedAt,
       List<String>? userIds,
       ChattingMessage? recentMessage});
+
+  @override
+  $ChattingMessageCopyWith<$Res>? get recentMessage;
 }
 
 /// @nodoc
