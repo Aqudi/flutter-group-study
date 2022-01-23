@@ -81,25 +81,47 @@ class ChattingRoomPage extends HookConsumerWidget {
                       final isMe = message?.sendBy == authService.user.uid;
                       final isNotification =
                           message?.type == ChattingMessageType.notification;
-                      final isPrevNotification =
-                          prevMessage?.type == ChattingMessageType.notification;
+                      final isNextNotification =
+                          nextMessage?.type == ChattingMessageType.notification;
 
-                      final showAvatar = !isNotification &&
-                          !isMe &&
-                          (message?.sendBy != prevMessage?.sendBy);
-
-                      final showUsername = isPrevNotification ||
-                          (!isNotification &&
-                              !isMe &&
-                              (message?.sendBy != nextMessage?.sendBy));
+                      bool showAvatar = false;
+                      if (!isNotification) {
+                        if (!isMe) {
+                          if (message?.sendBy != prevMessage?.sendBy) {
+                            showAvatar = true;
+                          }
+                          if (!showAvatar &&
+                              prevMessage != null &&
+                              message != null) {
+                            if (prevMessage.createdAt
+                                .subtract(const Duration(seconds: 5))
+                                .isAfter(message.createdAt)) {
+                              showAvatar = true;
+                            }
+                          }
+                        }
+                      }
 
                       bool showTime = false;
-                      if (nextMessage?.createdAt != null &&
-                          message?.createdAt != null &&
-                          message!.createdAt
-                              .subtract(const Duration(minutes: 5))
-                              .isAfter(nextMessage!.createdAt)) {
-                        showTime = true;
+                      if (nextMessage != null && message != null) {
+                        if (message.createdAt
+                            .subtract(const Duration(seconds: 5))
+                            .isAfter(nextMessage.createdAt)) {
+                          showTime = true;
+                        }
+                      }
+
+                      bool showUsername = false;
+                      if (!isMe) {
+                        if (showTime) {
+                          showUsername = true;
+                        }
+                        if (!showUsername && !isNotification) {
+                          if (isNextNotification ||
+                              message?.sendBy != nextMessage?.sendBy) {
+                            showUsername = true;
+                          }
+                        }
                       }
 
                       children = [

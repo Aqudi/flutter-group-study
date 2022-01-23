@@ -59,16 +59,6 @@ class ChattingRoomService extends BaseService {
     userIds.add(_authService.user.uid);
     userIds.sort();
 
-    // // direct 메시지 방이 있는지 확인
-    // if (type == ChattingRoomType.direct) {
-    //   final roomId = await checkDirectMessageRoom(userIds.first);
-    //   // direct 메시지 방이 있다면 해당 방 id로현재 방을 설정;
-    //   if (roomId != null) {
-    //     setCurrentRoom(roomId);
-    //     return;
-    //   }
-    // }
-
     // 방 생성 및 DB에 반영
     final room = ChattingRoom(
       name: roomName,
@@ -98,13 +88,14 @@ class ChattingRoomService extends BaseService {
       roomDocument = await _roomsRef.add(room);
       created = true;
     }
+
+    setCurrentRoom(room.copyWith(id: roomDocument.id));
     if (created) {
       await sendMessage(
         text: "'${_authService.user.name}'님이 채팅방을 만드셨습니다.",
         type: ChattingMessageType.notification,
       );
     }
-    setCurrentRoom(room.copyWith(id: roomDocument.id));
   }
 
   void setCurrentRoom(ChattingRoom room) {
