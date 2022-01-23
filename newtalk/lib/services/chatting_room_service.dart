@@ -17,6 +17,8 @@ class ChattingRoomService extends BaseService {
   final AuthService _authService;
   ChattingRoom? _currentRoom;
 
+  ChattingRoom get currentRoom => _currentRoom!;
+
   // firesotre 레퍼런스들
   final _roomsRef = FirebaseFirestore.instance
       .collection('rooms')
@@ -100,6 +102,7 @@ class ChattingRoomService extends BaseService {
 
   void setCurrentRoom(ChattingRoom room) {
     _currentRoom = room;
+    notifyListeners();
   }
 
   /// 현재 방의 메시지 가져오기

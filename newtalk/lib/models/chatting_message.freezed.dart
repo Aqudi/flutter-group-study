@@ -25,7 +25,7 @@ class _$ChattingMessageTearOff {
   _ChattingMessage call(
       {@JsonKey(ignore: true) String? id,
       required String text,
-      required String sendBy,
+      required String? sendBy,
       required ChattingMessageType type,
       @TimestampConverter() required DateTime createdAt}) {
     return _ChattingMessage(
@@ -50,7 +50,7 @@ mixin _$ChattingMessage {
   @JsonKey(ignore: true)
   String? get id => throw _privateConstructorUsedError;
   String get text => throw _privateConstructorUsedError;
-  String get sendBy => throw _privateConstructorUsedError;
+  String? get sendBy => throw _privateConstructorUsedError;
   ChattingMessageType get type => throw _privateConstructorUsedError;
   @TimestampConverter()
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -69,7 +69,7 @@ abstract class $ChattingMessageCopyWith<$Res> {
   $Res call(
       {@JsonKey(ignore: true) String? id,
       String text,
-      String sendBy,
+      String? sendBy,
       ChattingMessageType type,
       @TimestampConverter() DateTime createdAt});
 }
@@ -103,7 +103,7 @@ class _$ChattingMessageCopyWithImpl<$Res>
       sendBy: sendBy == freezed
           ? _value.sendBy
           : sendBy // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       type: type == freezed
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -126,7 +126,7 @@ abstract class _$ChattingMessageCopyWith<$Res>
   $Res call(
       {@JsonKey(ignore: true) String? id,
       String text,
-      String sendBy,
+      String? sendBy,
       ChattingMessageType type,
       @TimestampConverter() DateTime createdAt});
 }
@@ -162,7 +162,7 @@ class __$ChattingMessageCopyWithImpl<$Res>
       sendBy: sendBy == freezed
           ? _value.sendBy
           : sendBy // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       type: type == freezed
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
@@ -194,7 +194,7 @@ class _$_ChattingMessage implements _ChattingMessage {
   @override
   final String text;
   @override
-  final String sendBy;
+  final String? sendBy;
   @override
   final ChattingMessageType type;
   @override
@@ -242,7 +242,7 @@ abstract class _ChattingMessage implements ChattingMessage {
   factory _ChattingMessage(
       {@JsonKey(ignore: true) String? id,
       required String text,
-      required String sendBy,
+      required String? sendBy,
       required ChattingMessageType type,
       @TimestampConverter() required DateTime createdAt}) = _$_ChattingMessage;
 
@@ -255,7 +255,7 @@ abstract class _ChattingMessage implements ChattingMessage {
   @override
   String get text;
   @override
-  String get sendBy;
+  String? get sendBy;
   @override
   ChattingMessageType get type;
   @override

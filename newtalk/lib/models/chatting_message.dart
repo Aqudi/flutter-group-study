@@ -18,7 +18,7 @@ class ChattingMessage with _$ChattingMessage {
   factory ChattingMessage({
     @JsonKey(ignore: true) String? id,
     required String text,
-    required String sendBy,
+    required String? sendBy,
     required ChattingMessageType type,
     @TimestampConverter() required DateTime createdAt,
   }) = _ChattingMessage;

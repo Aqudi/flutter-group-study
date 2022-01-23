@@ -55,15 +55,14 @@ class ChattingListPage extends HookConsumerWidget {
                 itemBuilder: (context, index) {
                   final room = snapshot.data?.docs.elementAt(index).data();
                   return ChattingListTile(
-                    name: room?.userIds?.join(',') ?? '',
+                    name: room?.name ?? room?.userIds?.join(',') ?? '',
                     recentMessage: room?.recentMessage,
                     onTap: () {
                       chattingRoomService.setCurrentRoom(room!);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              ChattingRoomPage(name: room.name),
+                          builder: (context) => const ChattingRoomPage(),
                         ),
                       );
                     },

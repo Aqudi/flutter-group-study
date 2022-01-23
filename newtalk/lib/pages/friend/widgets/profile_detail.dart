@@ -87,8 +87,7 @@ class ProfileDetail extends HookConsumerWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  ChattingRoomPage(name: user.name),
+                              builder: (context) => const ChattingRoomPage(),
                             ));
                       },
                       child: Column(

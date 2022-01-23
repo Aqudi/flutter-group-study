@@ -3,22 +3,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:newtalk/models/app_user.dart';
 import 'package:newtalk/models/chatting_message.dart';
 import 'package:newtalk/pages/chatting/widgets/chatting_bubble.dart';
 import 'package:newtalk/services/auth_service.dart';
 import 'package:newtalk/services/chatting_room_service.dart';
+import 'package:newtalk/services/firestore_service.dart';
 import 'package:newtalk/widgets/base_scaffold.dart';
 
 class ChattingRoomPage extends HookConsumerWidget {
-  final String? name;
-
-  const ChattingRoomPage({Key? key, this.name}) : super(key: key);
+  const ChattingRoomPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authService = ref.read(authServiceProvider);
-    final chattingRoomService = ref.read(chattingRoomServiceProvider);
+    final fireStoreService = ref.read(fireStoreServiceProvider);
+    final chattingRoomService = ref.watch(chattingRoomServiceProvider);
     final controller = useTextEditingController();
+
+    final room = chattingRoomService.currentRoom;
+    final users = useState<Map<String, AppUser?>>({});
+    useEffect(() {
+      final futures = <Future<AppUser?>>[];
+      for (String uid in room.userIds ?? []) {
+        futures.add(fireStoreService.getUser(uid));
+      }
+      Future.wait(futures).then((appUsers) {
+        final uidAndUserMap = <String, AppUser>{};
+        for (final user in appUsers) {
+          if (user != null) {
+            uidAndUserMap.update(
+              user.uid,
+              (_) => user,
+              ifAbsent: () => user,
+            );
+          }
+        }
+        users.value = uidAndUserMap;
+      });
+    }, [room.userIds]);
 
     final buildMessageList = useCallback(() {
       return Expanded(
@@ -71,7 +94,7 @@ class ChattingRoomPage extends HookConsumerWidget {
                     ),
                     itemCount: docsSize,
                     itemBuilder: (context, index) {
-                      final message = docs?[index].data();
+                      ChattingMessage? message = docs?[index].data();
                       final nextMessage = (docsSize <= (index + 1))
                           ? null
                           : docs?[index + 1].data();
@@ -140,16 +163,15 @@ class ChattingRoomPage extends HookConsumerWidget {
                               ),
                             ),
                           ),
-                        if (showUsername)
-                          ChattingBubble(
-                            message: message,
-                            type: ChattingBubbleType.username,
-                          ),
                         if (!isNotification)
                           ChattingBubble(
                             isMe: isMe,
                             message: message,
                             showAvatar: showAvatar,
+                            showUsername: showUsername,
+                            sender: users.value.containsKey(message?.sendBy)
+                                ? users.value[message!.sendBy]
+                                : null,
                           ),
                       ];
 
@@ -214,7 +236,7 @@ class ChattingRoomPage extends HookConsumerWidget {
     }, []);
 
     return BaseScaffold(
-      title: name,
+      title: room.name,
       actions: [
         IconButton(
           onPressed: () {},

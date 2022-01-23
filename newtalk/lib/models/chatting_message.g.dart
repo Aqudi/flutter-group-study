@@ -9,7 +9,7 @@ part of 'chatting_message.dart';
 _$_ChattingMessage _$$_ChattingMessageFromJson(Map<String, dynamic> json) =>
     _$_ChattingMessage(
       text: json['text'] as String,
-      sendBy: json['sendBy'] as String,
+      sendBy: json['sendBy'] as String?,
       type: $enumDecode(_$ChattingMessageTypeEnumMap, json['type']),
       createdAt: DateTime.parse(json['createdAt'] as String),
     );

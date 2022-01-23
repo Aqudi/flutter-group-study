@@ -1,28 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:newtalk/models/app_user.dart';
 import 'package:newtalk/models/chatting_message.dart';
+import 'package:newtalk/widgets/profile_avatar.dart';
 
 enum ChattingBubbleType {
   message,
-  username,
   notification,
 }
 
-class ChattingBubble extends StatelessWidget {
+class ChattingBubble extends HookConsumerWidget {
   final bool isMe;
+  final bool showUsername;
   final bool showAvatar;
   final ChattingMessage? message;
   final ChattingBubbleType type;
+  final AppUser? sender;
 
   const ChattingBubble({
     Key? key,
     required this.message,
     this.isMe = false,
     this.type = ChattingBubbleType.message,
+    this.showUsername = false,
     this.showAvatar = false,
+    this.sender,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final color = isMe ? Colors.grey.shade300 : Colors.white;
     const containerPadding = EdgeInsets.only(top: 5, bottom: 5);
     const circleAvatarRadius = 20.0;
@@ -48,14 +54,13 @@ class ChattingBubble extends StatelessWidget {
         );
       case ChattingBubbleType.message:
         children = [
-          if (!isMe)
-            Opacity(
-              opacity: showAvatar ? 1 : 0,
-              child: const CircleAvatar(
-                radius: circleAvatarRadius,
-                child: Icon(Icons.person, size: circleAvatarRadius + 5),
-              ),
+          if (!isMe && showAvatar)
+            ProfileAvatar(
+              size: circleAvatarRadius,
+              user: sender,
             ),
+          if (!(!isMe && showAvatar))
+            const SizedBox(width: circleAvatarRadius * 2),
           const SizedBox(width: 5),
           Flexible(
             child: Container(
@@ -73,19 +78,6 @@ class ChattingBubble extends StatelessWidget {
           ),
         ];
         break;
-      case ChattingBubbleType.username:
-        if (isMe || message?.sendBy == null) {
-          children = [];
-        } else {
-          children = [
-            const SizedBox(width: circleAvatarRadius * 2 + 17),
-            Text(
-              "${message?.sendBy}",
-              style: const TextStyle(color: Colors.grey),
-            ),
-          ];
-        }
-        break;
     }
 
     return Padding(
@@ -93,6 +85,17 @@ class ChattingBubble extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          if (!isMe && showUsername)
+            Row(
+              children: [
+                const SizedBox(width: circleAvatarRadius * 2 + 17),
+                Text(
+                  "${sender?.name ?? message?.sendBy}",
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
+          const SizedBox(height: 5),
           Row(
             // 상대방: 왼쪽, 나: 오른쪽 정렬
             mainAxisAlignment:
