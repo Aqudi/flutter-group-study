@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:newtalk/models/app_user.dart';
 import 'package:newtalk/pages/chatting/chatting_room_page.dart';
+import 'package:newtalk/services/auth_service.dart';
 import 'package:newtalk/widgets/profile_avatar.dart';
 import 'package:newtalk/services/chatting_room_service.dart';
 
@@ -15,6 +16,7 @@ class ProfileDetail extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final authService = ref.read(authServiceProvider);
     final chattingRoomService = ref.read(chattingRoomServiceProvider);
 
     const size = 40.0;
@@ -72,23 +74,57 @@ class ProfileDetail extends HookConsumerWidget {
               Divider(
                 color: textColor.withOpacity(0.5),
               ),
-              IconButton(
-                onPressed: () async {
-                  await chattingRoomService
-                      .createRoom(roomName: user.name, userIds: [user.uid]);
-                  Navigator.pop(context);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChattingRoomPage(name: user.name),
-                      ));
-                },
-                icon: const Icon(
-                  Icons.chat,
-                  color: textColor,
-                ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (authService.user.uid != user.uid)
+                    TextButton(
+                      onPressed: () async {
+                        await chattingRoomService.createRoom(
+                            roomName: user.name, userIds: [user.uid]);
+                        Navigator.pop(context);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ChattingRoomPage(name: user.name),
+                            ));
+                      },
+                      child: Column(
+                        children: const [
+                          Icon(
+                            Icons.chat,
+                            color: textColor,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            '채팅',
+                            style: TextStyle(color: textColor),
+                          ),
+                        ],
+                      ),
+                    ),
+                  if (authService.user.uid == user.uid)
+                    TextButton(
+                      onPressed: () async {},
+                      child: Column(
+                        children: const [
+                          Icon(
+                            Icons.edit,
+                            color: textColor,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            '프로필 편집',
+                            style: TextStyle(color: textColor),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 20),
             ],
           ),
         ),
