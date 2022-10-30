@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:newtalk/pages/auth/login_page.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:newtalk/pages/root_page.dart';
 
-class App extends StatelessWidget {
+class App extends HookConsumerWidget {
   const App({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Colors.white,
+        textTheme: Typography.material2018().black,
       ),
-      home: const LoginPage(),
+      home: const RootPage(),
     );
   }
 }

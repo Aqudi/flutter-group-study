@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:newtalk/pages/friend/widgets/profile_avatar.dart';
+import 'package:newtalk/models/app_user.dart';
+import 'package:newtalk/widgets/profile_avatar.dart';
 import 'package:newtalk/pages/friend/widgets/profile_detail.dart';
 
 class ProfileListTile extends StatelessWidget {
-  final String name;
+  final AppUser user;
 
   const ProfileListTile({
     Key? key,
-    required this.name,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -21,20 +22,20 @@ class ProfileListTile extends StatelessWidget {
         left: 15,
       ),
       horizontalTitleGap: 20,
-      leading: const SizedBox(
+      leading: SizedBox(
         height: double.infinity,
-        child: ProfileAvatar(size: size),
+        child: ProfileAvatar(size: size, user: user),
       ),
       onTap: () {
         showGeneralDialog(
           context: context,
           pageBuilder: (context, animation, secondaryAnimation) {
-            return ProfileDetail(name: name);
+            return ProfileDetail(user: user);
           },
         );
       },
       title: Text(
-        name,
+        user.name,
         style: const TextStyle(
           fontSize: size,
         ),
